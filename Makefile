@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alonebo/CLionProjects/gtk-360ball
+CMAKE_SOURCE_DIR = /home/alonebo/CLionProjects/network-ball-gtk
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alonebo/CLionProjects/gtk-360ball
+CMAKE_BINARY_DIR = /home/alonebo/CLionProjects/network-ball-gtk
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alonebo/CLionProjects/gtk-360ball/CMakeFiles /home/alonebo/CLionProjects/gtk-360ball/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alonebo/CLionProjects/network-ball-gtk/CMakeFiles /home/alonebo/CLionProjects/network-ball-gtk/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alonebo/CLionProjects/gtk-360ball/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alonebo/CLionProjects/network-ball-gtk/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named gtk-net-ball
+# Target rules for targets named network-ball-gtk
 
 # Build rule for target.
-gtk-net-ball: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gtk-net-ball
-.PHONY : gtk-net-ball
+network-ball-gtk: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 network-ball-gtk
+.PHONY : network-ball-gtk
 
 # fast build rule for target.
-gtk-net-ball/fast:
-	$(MAKE) -f CMakeFiles/gtk-net-ball.dir/build.make CMakeFiles/gtk-net-ball.dir/build
-.PHONY : gtk-net-ball/fast
+network-ball-gtk/fast:
+	$(MAKE) -f CMakeFiles/network-ball-gtk.dir/build.make CMakeFiles/network-ball-gtk.dir/build
+.PHONY : network-ball-gtk/fast
 
 application.o: application.c.o
 
@@ -129,7 +129,7 @@ application.o: application.c.o
 
 # target to build an object file
 application.c.o:
-	$(MAKE) -f CMakeFiles/gtk-net-ball.dir/build.make CMakeFiles/gtk-net-ball.dir/application.c.o
+	$(MAKE) -f CMakeFiles/network-ball-gtk.dir/build.make CMakeFiles/network-ball-gtk.dir/application.c.o
 .PHONY : application.c.o
 
 application.i: application.c.i
@@ -138,7 +138,7 @@ application.i: application.c.i
 
 # target to preprocess a source file
 application.c.i:
-	$(MAKE) -f CMakeFiles/gtk-net-ball.dir/build.make CMakeFiles/gtk-net-ball.dir/application.c.i
+	$(MAKE) -f CMakeFiles/network-ball-gtk.dir/build.make CMakeFiles/network-ball-gtk.dir/application.c.i
 .PHONY : application.c.i
 
 application.s: application.c.s
@@ -147,7 +147,7 @@ application.s: application.c.s
 
 # target to generate assembly for a file
 application.c.s:
-	$(MAKE) -f CMakeFiles/gtk-net-ball.dir/build.make CMakeFiles/gtk-net-ball.dir/application.c.s
+	$(MAKE) -f CMakeFiles/network-ball-gtk.dir/build.make CMakeFiles/network-ball-gtk.dir/application.c.s
 .PHONY : application.c.s
 
 # Help Target
@@ -157,7 +157,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... gtk-net-ball"
+	@echo "... network-ball-gtk"
 	@echo "... edit_cache"
 	@echo "... application.o"
 	@echo "... application.i"
