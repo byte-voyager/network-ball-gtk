@@ -3,6 +3,7 @@
 Display network speed and memory information on linux desktop platform.
 Similar to QiHu360 balls.
 
+![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk.gif)
 
 ## How to run?
 download binary file `network-ball-gtk` from .
@@ -37,4 +38,4 @@ make
 Thanks deepin-system-monitor.
 https://github.com/manateelazycat/deepin-system-monitor
 
-![](https://github.com/AloneBo/gtk-netspeed-popup/blob/master/linuxnetspeedpopup.png?raw=true)
+
