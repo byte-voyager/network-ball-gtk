@@ -1,4 +1,4 @@
-/* net-ball-gtk - display network speed for linux
+/* network-ball-gtk - display network speed for linux
  * Copyright (C) @Baloneo 
  * https://github.com/Baloneo/
  * This library is free software; you can redistribute it and/or
@@ -139,8 +139,7 @@ void init_value() {
     memPercentage = get_mem_percentage();
 }
 
-static gboolean
-cb_timeout(gpointer data) {
+static gboolean cb_timeout(gpointer data) {
 
     init_value();
 
