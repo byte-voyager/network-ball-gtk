@@ -1,0 +1,3 @@
+/home/alonebo/CLionProjects/gtk-360ball/CMakeFiles/rebuild_cache.dir
+/home/alonebo/CLionProjects/gtk-360ball/CMakeFiles/gtk-net-ball.dir
+/home/alonebo/CLionProjects/gtk-360ball/CMakeFiles/edit_cache.dir
