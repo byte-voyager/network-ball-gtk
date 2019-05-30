@@ -6,7 +6,7 @@ Similar to QiHu360 balls.
 ![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk.gif)
 
 ## How to run?
-1. download binary file `network-ball-gtk` from .
+1. download binary file `network-ball-gtk` from [releases](https://github.com/Baloneo/network-ball-gtk/releases)
 ```
 wget https://github.com/Baloneo/network-ball-gtk/releases/download/1.0/network-ball-gtk
 ```
