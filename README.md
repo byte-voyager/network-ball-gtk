@@ -6,13 +6,17 @@ Similar to QiHu360 balls.
 ![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk.gif)
 
 ## How to run?
-download binary file `network-ball-gtk` from .
+1. download binary file `network-ball-gtk` from .
 ```
-wget xxx
+wget https://github.com/Baloneo/network-ball-gtk/releases/download/1.0/network-ball-gtk
 ```
-give executable permissions
+2. give executable permissions
 ```
 chmod +x network-ball-gtk
+```
+3. run
+```
+./network-ball-gtk
 ```
 
 ## Auto startup
