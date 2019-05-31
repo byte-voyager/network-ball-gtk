@@ -19,10 +19,11 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#define SIZE (74) /* left circle size*/
-#define RIGHT_CIRCLE_WIDTH (100)
+#define SIZE (54) /* left circle size*/
+#define RIGHT_CIRCLE_WIDTH (84)
 #define RIGHT_CIRCLE_SIZE (50)
 #define PEN_WIDTH (2)
+#define NET_SPEED_TEXT_MARGIN_LEFT (5)
 #define MEM_FONT "Ubuntu Mono"
 #define NET_FONT "Noto"
 
@@ -272,7 +273,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
                                CAIRO_FONT_WEIGHT_BOLD);
         cairo_set_font_size(second_cr, 12);
 
-        cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH - SIZE / 2), -8);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2)+NET_SPEED_TEXT_MARGIN_LEFT), -8);
         if (csD >= 2048)
         {
             sprintf(tmp, " ↑ %.2f m/s", kb2m(csD));
@@ -283,7 +284,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         }
 
         cairo_show_text(second_cr, tmp);
-        cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH - SIZE / 2), 15);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2)+NET_SPEED_TEXT_MARGIN_LEFT), 15);
         if (crD >= 1024)
         {
             sprintf(tmp, " ↓ %.2f m/s", kb2m(crD));
