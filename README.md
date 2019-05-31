@@ -18,6 +18,10 @@ chmod +x network-ball-gtk
 ```
 ./network-ball-gtk
 ```
+4. stop
+```
+killall network-ball-gtk
+```
 
 ## Auto startup
 find the boot self-starting management software in your system. add it.

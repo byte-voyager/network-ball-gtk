@@ -97,6 +97,10 @@ void get_bandwidth(unsigned long long int *receiveBytes, unsigned long long int 
     free(buf);
 }
 
+float kb2m(unsigned long int kb) {
+    return (float)kb / 1024;
+}
+
 
 static void tran_setup(GtkWidget *win) {
     GdkScreen *screen;
@@ -127,8 +131,8 @@ void init_value() {
     get_bandwidth(&rD, &sD);
 
     // calculate one second of network speed
-    unsigned long int rSpeed = (rD - prD) / 1024;
-    unsigned long int sSpeed = (sD - psD) / 1024;
+    unsigned long int rSpeed = (rD - prD) / 1024; // recv speed (kb/s)
+    unsigned long int sSpeed = (sD - psD) / 1024; // send speed (kb/s)
 
     prD = rD;
     psD = sD;
@@ -229,10 +233,20 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_set_font_size(second_cr, 11);
 
     cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH-SIZE/2), -8);
-    sprintf(tmp, " ↑ %lu kb/s", csD);
+    if(csD >= 2048) {
+        sprintf(tmp, " ↑ %.1f m/s", kb2m(csD));
+    } else {
+        sprintf(tmp, " ↑ %lu kb/s", csD);
+    }
+    
     cairo_show_text(second_cr, tmp);
     cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH-SIZE/2), 15);
-    sprintf(tmp, " ↓ %lu kb/s", crD);
+    if(crD >= 1024) {
+        sprintf(tmp, " ↓ %.1f m/s", kb2m(crD));
+    } else {
+        sprintf(tmp, " ↓ %lu kb/s", crD);
+    }
+    
     cairo_show_text(second_cr, tmp);
 
     // add to cr
