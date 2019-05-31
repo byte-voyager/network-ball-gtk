@@ -3,7 +3,7 @@
 Display network speed and memory information on linux desktop platform.
 Similar to QiHu360 balls.
 
-![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk.gif)
+![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk2.gif)
 
 ## How to run?
 1. download binary file `network-ball-gtk` from [releases](https://github.com/Baloneo/network-ball-gtk/releases)
