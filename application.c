@@ -120,7 +120,7 @@ static void tran_setup(GtkWidget *win)
 
     if (visual != NULL && gdk_screen_is_composited(screen))
     {
-        gtk_widget_set_visual(win, visual); // set transpant
+        gtk_widget_set_visual(win, visual); // set transparent
         g_print("is_composited=true");
     }
     else
@@ -332,7 +332,7 @@ int main(int argc, char *argv[])
     gtk_init(&argc, &argv);
 
     window = gtk_window_new(GTK_WINDOW_POPUP);
-    tran_setup(window); // let window transpant
+    tran_setup(window); // let window transparent
 
     g_signal_connect(G_OBJECT(window), "destroy",
                      G_CALLBACK(gtk_main_quit), NULL);

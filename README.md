@@ -8,7 +8,7 @@ Similar to QiHu360 balls.
 ## How to run?
 1. download binary file `network-ball-gtk` from [releases](https://github.com/Baloneo/network-ball-gtk/releases)
 ```
-wget https://github.com/Baloneo/network-ball-gtk/releases/download/1.0/network-ball-gtk
+wget https://github.com/Baloneo/network-ball-gtk/releases/download/1.1/network-ball-gtk
 ```
 2. give executable permissions
 ```
