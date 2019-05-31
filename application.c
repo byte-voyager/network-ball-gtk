@@ -24,7 +24,7 @@
 #define RIGHT_CIRCLE_SIZE (50)
 #define PEN_WIDTH (4)
 #define MEM_FONT "Ubuntu Mono"
-#define NET_FONT "Serif"
+#define NET_FONT "Noto"
 
 static void do_drawing(cairo_t *, GtkWidget *);
 
@@ -230,11 +230,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_select_font_face(second_cr, NET_FONT,
                            CAIRO_FONT_SLANT_NORMAL,
                            CAIRO_FONT_WEIGHT_BOLD);
-    cairo_set_font_size(second_cr, 11);
+    cairo_set_font_size(second_cr, 12);
 
     cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH-SIZE/2), -8);
     if(csD >= 2048) {
-        sprintf(tmp, " ↑ %.1f m/s", kb2m(csD));
+        sprintf(tmp, " ↑ %.2f m/s", kb2m(csD));
     } else {
         sprintf(tmp, " ↑ %lu kb/s", csD);
     }
@@ -242,7 +242,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_show_text(second_cr, tmp);
     cairo_move_to(second_cr, -(RIGHT_CIRCLE_WIDTH-SIZE/2), 15);
     if(crD >= 1024) {
-        sprintf(tmp, " ↓ %.1f m/s", kb2m(crD));
+        sprintf(tmp, " ↓ %.2f m/s", kb2m(crD));
     } else {
         sprintf(tmp, " ↓ %lu kb/s", crD);
     }
