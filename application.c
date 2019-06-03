@@ -19,7 +19,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#define SIZE (54) /* left circle size*/
+#define SIZE (52) /* left circle size*/
 #define RIGHT_CIRCLE_WIDTH (84)
 #define RIGHT_CIRCLE_SIZE (50)
 #define PEN_WIDTH (2)
@@ -135,6 +135,7 @@ gboolean on_move_event(GtkWidget *window,
                        gpointer user_data)
 {
     gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
+    return TRUE;
 }
 
 void init_value()
@@ -206,7 +207,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_translate(first_cr, SIZE / 2 + PEN_WIDTH, height / 2); // setup center point
 
     cairo_set_line_width(first_cr, PEN_WIDTH);                                            // setup pen width
-    cairo_set_source_rgba(first_cr, get_color(255), get_color(255), get_color(255), 0.9); // setup color
+    cairo_set_source_rgba(first_cr, get_color(193), get_color(205), get_color(193), 0.5); // setup color
 
     cairo_arc(first_cr, 0, 0, SIZE / 2, 0, 2 * M_PI);
     cairo_stroke_preserve(first_cr); // draw stroke
@@ -234,7 +235,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         cairo_set_source_rgb(first_cr, 0.9, 0, 0); // red
     }
 
-    cairo_fill(first_cr); // fill memory
+    cairo_fill(first_cr); // fill use memory
 
     // draw memory info
     cairo_set_source_rgb(first_cr, 0.1, 0.1, 0.1);
@@ -248,22 +249,19 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 
     if (SHOW_NETWORK_SPEED)
     {
-        // draw rectangle
-        // cairo_set_source_rgb(second_cr,  0.85, 0.8, 0.8);
-        cairo_set_source_rgba(second_cr, 0.99, 0.99, 0.99, 1);
-        // cairo_rectangle(second_cr, 0, 0, RIGHT_CIRCLE_WIDTH, RIGHT_CIRCLE_SIZE);
-        cairo_arc(second_cr, 0, SIZE / 2, SIZE / 2, -0.5 * M_PI, 0.5 * M_PI);
-        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2);
-        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, (SIZE - RIGHT_CIRCLE_SIZE) / 2);
-        // cairo_line_to(second_cr, 0, RIGHT_CIRCLE_SIZE);
+        // draw an incomplete rectangle, missing a semicircle on the left
+        cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193), 0.9);
+        cairo_arc(second_cr, 0, SIZE / 2, SIZE / 2, -0.5 * M_PI, 0.5 * M_PI); // draw semicircle, like ")"
+        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2); // lint to rectangle (right, bottom)
+        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, (SIZE - RIGHT_CIRCLE_SIZE) / 2); // line to (right, top)
         cairo_fill(second_cr);
 
         cairo_close_path(second_cr);
 
-        // draw right circle
-        cairo_set_source_rgb(second_cr, 0.99, 0.99, 0.99); // The same color as the rectangle
-        cairo_translate(second_cr, RIGHT_CIRCLE_WIDTH, SIZE / 2);
-        cairo_arc(second_cr, 0, 0, RIGHT_CIRCLE_SIZE / 2, 0, 2 * M_PI);
+        // draw right arc
+        cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193), 0.9); // The same color as the rectangle
+        cairo_translate(second_cr, RIGHT_CIRCLE_WIDTH, SIZE / 2); // set up (0, 0) to （right_edge,center)
+        cairo_arc(second_cr, 0, 0, RIGHT_CIRCLE_SIZE / 2, -0.5 * M_PI, 0.5 * M_PI);
         cairo_fill(second_cr);
 
         // draw net-spped text
@@ -273,7 +271,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
                                CAIRO_FONT_WEIGHT_BOLD);
         cairo_set_font_size(second_cr, 12);
 
-        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2)+NET_SPEED_TEXT_MARGIN_LEFT), -8);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) + NET_SPEED_TEXT_MARGIN_LEFT), -8);
         if (csD >= 2048)
         {
             sprintf(tmp, " ↑ %.2f m/s", kb2m(csD));
@@ -284,7 +282,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         }
 
         cairo_show_text(second_cr, tmp);
-        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2)+NET_SPEED_TEXT_MARGIN_LEFT), 15);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) + NET_SPEED_TEXT_MARGIN_LEFT), 15);
         if (crD >= 1024)
         {
             sprintf(tmp, " ↓ %.2f m/s", kb2m(crD));
@@ -299,7 +297,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 
     // add to cr
     cairo_set_operator(first_cr, CAIRO_OPERATOR_DEST_OVER); // let the left circle cover the right rectangle
-    cairo_set_source_surface(first_cr, second, 0, -(SIZE) / 2);
+    cairo_set_source_surface(first_cr, second, 0, -(SIZE) / 2); // set up (0, 0) to right circle's top position
     cairo_paint(first_cr);
 
     cairo_set_source_surface(cr, first, 0, 0);
@@ -314,8 +312,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     return FALSE;
 }
 
-static gboolean
-button_press_event(GtkWidget *widget, GdkEventButton *event)
+static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event)
 {
     SHOW_NETWORK_SPEED = !SHOW_NETWORK_SPEED;
     gtk_widget_queue_draw(widget);
@@ -353,9 +350,17 @@ int main(int argc, char *argv[])
     // timer
     gdk_threads_add_timeout_full(G_PRIORITY_DEFAULT_IDLE, 1000, cb_timeout, (gpointer)darea, NULL);
 
-    // click event (did not use)
+    // click event
     g_signal_connect(G_OBJECT(window), "button_press_event",
                      G_CALLBACK(button_press_event), NULL);
+
+    // GdkMonitor *m =  gdk_display_get_primary_monitor(gdk_display_get_default());
+
+    // gtk_window_move(GTK_WINDOW(window), gdk_monitor_get_width_mm(m), gdk_monitor_get_height_mm(m));
+
+    GdkRectangle workarea = {0};
+    gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &workarea);
+    gtk_window_move(GTK_WINDOW(window), workarea.width-200, workarea.height-100);
 
     // show window
     gtk_widget_show_all(window);
