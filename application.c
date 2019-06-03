@@ -1,12 +1,12 @@
 /* network-ball-gtk - display network speed for linux
  * Copyright (C) @Baloneo 
  * https://github.com/Baloneo/
- * This library is free software; you can redistribute it and/or
+ * This application is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -19,6 +19,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
+#define VERSION (12)
 #define SIZE (52) /* left circle size*/
 #define RIGHT_CIRCLE_WIDTH (84)
 #define RIGHT_CIRCLE_SIZE (50)
@@ -341,7 +342,7 @@ int main(int argc, char *argv[])
                      G_CALLBACK(on_draw_event), NULL);
     gtk_container_add(GTK_CONTAINER(window), darea);
 
-    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+    // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER); 
     gtk_window_set_default_size(GTK_WINDOW(window), RIGHT_CIRCLE_WIDTH + (RIGHT_CIRCLE_SIZE / 2) + (SIZE / 2) + PEN_WIDTH * 2, SIZE + PEN_WIDTH + 4);
 
     // let the window move
