@@ -2,3 +2,5 @@ CMakeFiles/*
 CMakeCache.txt
 cmake_install.cmake
 .vscode/*
+.idea/*
+.cmake-build-debug/*

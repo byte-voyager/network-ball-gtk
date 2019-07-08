@@ -10,7 +10,9 @@ PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
 # Setup CMake to use GTK+, tell the compiler where to look for headers
 # and to the linker where to look for libraries
 INCLUDE_DIRECTORIES(${GTK3_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(include)
 LINK_DIRECTORIES(${GTK3_LIBRARY_DIRS})
+
 
 
 # Add other flags to the compiler
@@ -18,5 +20,6 @@ ADD_DEFINITIONS(${GTK3_CFLAGS_OTHER})
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-add_executable(network-ball-gtk application.c)
+
+add_executable(network-ball-gtk src/application.c src/utils.c)
 TARGET_LINK_LIBRARIES(network-ball-gtk ${GTK3_LIBRARIES})

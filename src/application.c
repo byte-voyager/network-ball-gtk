@@ -1,4 +1,4 @@
-/* network-ball-gtk - display network speed for linux
+/* network-ball-gtk - display network speed and mem for linux
  * Copyright (C) @Baloneo 
  * https://github.com/Baloneo/
  * This application is free software; you can redistribute it and/or
@@ -19,97 +19,23 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#define VERSION (12)
+#include "utils.h"
+
 #define SIZE (52) /* left circle size*/
 #define RIGHT_CIRCLE_WIDTH (84)
-#define RIGHT_CIRCLE_SIZE (50)
+#define RIGHT_CIRCLE_SIZE (52)
 #define PEN_WIDTH (2)
-#define NET_SPEED_TEXT_MARGIN_LEFT (5)
-#define MEM_FONT "Ubuntu Mono"
+int NET_SPEED_TEXT_MARGIN_LEFT = 0;
+#define MEM_FONT "Noto Serif"
 #define NET_FONT "Noto"
 
 static gboolean SHOW_NETWORK_SPEED = TRUE;
 
-static void do_drawing(cairo_t *, GtkWidget *);
 
 static unsigned long long int prD, psD;
 static unsigned long int crD, csD; // KB
 static unsigned int memPercentage = 0;
 
-int get_mem_percentage()
-{
-
-    // read memory inforation from /proc/meminfo
-    FILE *fd_men = fopen("/proc/meminfo", "r");
-    if (fd_men == NULL)
-    {
-        perror("open file /proc/meminfo error");
-        exit(-1);
-    }
-
-    char tmp[255];
-    fgets(tmp, 255, fd_men);
-    unsigned long men = 0;
-    unsigned long free = 0;
-    sscanf(tmp, "MemTotal: %ld KB", &men);
-    fgets(tmp, 255, fd_men);
-    fgets(tmp, 255, fd_men);
-    sscanf(tmp, "MemAvailable: %ld KB", &free);
-
-    unsigned long use = men - free;
-    int percent = ((float)use / (float)men) * 100;
-
-    fclose(fd_men);
-    return percent;
-}
-
-void get_bandwidth(unsigned long long int *receiveBytes, unsigned long long int *sendBytes)
-{
-    char *buf;
-    const int bufSize = 255;
-    FILE *devfd;
-
-    buf = (char *)calloc(bufSize, 1);
-
-    devfd = fopen("/proc/net/dev", "r");
-    if (devfd == NULL)
-    {
-        perror("open file /proc/net/dev failure.");
-        exit(-1);
-    }
-
-    // Ignore the first and second lines of the file.
-    fgets(buf, bufSize, devfd); // fgets will return if reading a newline.
-    fgets(buf, bufSize, devfd);
-    *receiveBytes = 0;
-    *sendBytes = 0;
-
-    while (fgets(buf, bufSize, devfd))
-    {
-        unsigned long long int rBytes, sBytes;
-        char *line = strdup(buf);
-
-        char *dev;
-        dev = strtok(line, ":");
-        gchar *is_lo = g_strrstr(dev, "lo");
-        if (is_lo != NULL)
-        { // if end with lo
-            continue;
-        }
-        sscanf(buf + strlen(dev) + 2, "%llu %*d %*d %*d %*d %*d %*d %*d %llu", &rBytes, &sBytes);
-        *receiveBytes += rBytes;
-        *sendBytes += sBytes;
-        free(line);
-    }
-
-    fclose(devfd);
-    free(buf);
-}
-
-float kb2m(unsigned long int kb)
-{
-    return (float)kb / 1024;
-}
 
 static void tran_setup(GtkWidget *win)
 {
@@ -127,7 +53,7 @@ static void tran_setup(GtkWidget *win)
     }
     else
     { // not support
-        g_print("Your system not suppot transparent window!\nPlease check if you have turned off this feature.\n");
+        g_print("Your system not support transparent window!\nPlease check if you have turned off this feature.\n");
     }
 }
 
@@ -163,11 +89,7 @@ float get_color(int c)
     return (float)c / 255;
 }
 
-float random_color()
-{
-    int num = rand() % 255 + 1;
-    return get_color(num);
-}
+
 
 static gboolean cb_timeout(gpointer data)
 {
@@ -239,11 +161,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_fill(first_cr); // fill use memory
 
     // draw memory info
-    cairo_set_source_rgb(first_cr, 0.1, 0.1, 0.1);
+    cairo_set_source_rgb(first_cr, 0.1, 0.1, 0);
     cairo_select_font_face(first_cr, MEM_FONT,
                            CAIRO_FONT_SLANT_NORMAL,
                            CAIRO_FONT_WEIGHT_BOLD);
-    cairo_set_font_size(first_cr, 16);
+    cairo_set_font_size(first_cr, 14);
     cairo_move_to(first_cr, -12, 4);
     sprintf(tmp, "%d%%", memPercentage);
     cairo_show_text(first_cr, tmp);
@@ -267,15 +189,16 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 
         // draw net-spped text
         cairo_set_source_rgb(second_cr, 0.1, 0.1, 0.1);
+
         cairo_select_font_face(second_cr, NET_FONT,
                                CAIRO_FONT_SLANT_NORMAL,
                                CAIRO_FONT_WEIGHT_BOLD);
         cairo_set_font_size(second_cr, 12);
 
-        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) + NET_SPEED_TEXT_MARGIN_LEFT), -8);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) - NET_SPEED_TEXT_MARGIN_LEFT), -8);
         if (csD >= 2048)
         {
-            sprintf(tmp, " ↑ %.2f m/s", kb2m(csD));
+            sprintf(tmp, " ↑%.2f m/s", kb2m(csD));
         }
         else
         {
@@ -283,10 +206,10 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         }
 
         cairo_show_text(second_cr, tmp);
-        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) + NET_SPEED_TEXT_MARGIN_LEFT), 15);
+        cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) - NET_SPEED_TEXT_MARGIN_LEFT), 15);
         if (crD >= 1024)
         {
-            sprintf(tmp, " ↓ %.2f m/s", kb2m(crD));
+            sprintf(tmp, " ↓%.2f m/s", kb2m(crD));
         }
         else
         {
@@ -322,6 +245,48 @@ static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 int main(int argc, char *argv[])
 {
+    // delay
+//    if (argc == 3) {
+//        if (strcmp( argv[1], "-delay") == 0) {
+//            int time = atoi(argv[2]);
+//            sleep(time);
+//        } else if (strcmp(argv[1], "-margin") == 0) { // 兼容操作系统
+//            int margin = atoi(argv[2]);
+//            NET_SPEED_TEXT_MARGIN_LEFT = margin;
+//        }
+//    } else if (argc == 2) {
+//        if (strcmp(argv[1], "-h") == 0) {
+//            printf("OPTIONS: \n\t-delay\tdelay load app. \n\t-margin\tset netspeed text left margin.\n");
+//            return 0 ;
+//        }
+//    }
+//
+    int time = 0;
+    for (int i=1; i<argc; i++) {
+        if (strcmp( argv[i], "-delay") == 0) {
+            if (argc > (i+1)) {
+                time = atoi(argv[i+1]);
+            } else {
+                printf("Error: missing delay value\n");
+            }
+
+        } else if (strcmp(argv[i], "-margin") == 0) { // 兼容操作系统
+            if (argc > (i+1)) {
+                int margin = atoi(argv[i+1]);
+                NET_SPEED_TEXT_MARGIN_LEFT = margin;
+            } else {
+                printf("Error: missing margin value\n");
+            }
+
+
+        } else if(strcmp(argv[i], "-h") == 0) {
+            printf("OPTIONS: \n\t-delay\tdelay load app. \n\t-margin\tset netspeed text left margin.\n");
+            return 0 ;
+        }
+    }
+    sleep(time);
+
+
     GtkWidget *window;
     GtkWidget *darea;
 
