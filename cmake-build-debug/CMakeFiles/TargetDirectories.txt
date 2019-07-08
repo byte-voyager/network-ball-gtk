@@ -1,3 +1,0 @@
-/home/alonebo/github/network-ball-gtk/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/alonebo/github/network-ball-gtk/cmake-build-debug/CMakeFiles/network-ball-gtk.dir
-/home/alonebo/github/network-ball-gtk/cmake-build-debug/CMakeFiles/edit_cache.dir
