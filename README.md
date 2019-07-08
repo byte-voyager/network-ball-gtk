@@ -22,7 +22,6 @@ chmod +x network-ball-gtk
 ```
 ctrl+c
 ```
-or
 ```
 killall network-ball-gtk
 ```
@@ -31,7 +30,7 @@ killall network-ball-gtk
 ### 1. 手动添加
 通常你的Linux桌面环境会有一个自启动设置软件，你只要找到，然后添加本软件即可。
 
-*注意:*由于桌面完全启动需要一点时间，如果你发现软件自启动之后，背景不是透明的，你需要添加一个`-delay`参数来延迟启动。
+*由于桌面完全启动需要一点时间，如果你发现软件自启动之后，背景不是透明的，你需要添加一个`-delay`参数来延迟启动*
 
 ### 2. 使用脚本
 在项目根目录下执行
@@ -41,7 +40,7 @@ bash add_autostart.sh
 
 ## Options
 * -delay value
-sleep 指定时间后显示界面
+指定延迟时间后显示界面，秒数
 
 * -margin value
 设置网速文本左间距
