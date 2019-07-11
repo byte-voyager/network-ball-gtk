@@ -18,6 +18,10 @@ chmod +x network-ball-gtk
 ```
 ./network-ball-gtk
 ```
+后台运行
+```
+nohup ./network-ball-gtk &
+```
 4. 停止
 ```
 ctrl+c

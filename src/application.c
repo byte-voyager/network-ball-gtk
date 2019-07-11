@@ -37,8 +37,7 @@ static unsigned long int crD, csD; // KB
 static unsigned int memPercentage = 0;
 
 
-static void tran_setup(GtkWidget *win)
-{
+static void tran_setup(GtkWidget *win) {
     GdkScreen *screen;
     GdkVisual *visual;
 
@@ -46,27 +45,22 @@ static void tran_setup(GtkWidget *win)
     screen = gdk_screen_get_default();
     visual = gdk_screen_get_rgba_visual(screen);
 
-    if (visual != NULL && gdk_screen_is_composited(screen))
-    {
+    if (visual != NULL && gdk_screen_is_composited(screen)) {
         gtk_widget_set_visual(win, visual); // set transparent
         g_print("is_composited=true");
-    }
-    else
-    { // not support
+    } else { // not support
         g_print("Your system not support transparent window!\nPlease check if you have turned off this feature.\n");
     }
 }
 
 gboolean on_move_event(GtkWidget *window,
                        GdkEvent *event,
-                       gpointer user_data)
-{
+                       gpointer user_data) {
     gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
     return TRUE;
 }
 
-void init_value()
-{
+void init_value() {
 
     unsigned long long int rD, sD; // current receive data, send data
     get_bandwidth(&rD, &sD);
@@ -84,15 +78,12 @@ void init_value()
     memPercentage = get_mem_percentage();
 }
 
-float get_color(int c)
-{
-    return (float)c / 255;
+float get_color(int c) {
+    return (float) c / 255;
 }
 
 
-
-static gboolean cb_timeout(gpointer data)
-{
+static gboolean cb_timeout(gpointer data) {
 
     init_value();
 
@@ -104,8 +95,7 @@ static gboolean cb_timeout(gpointer data)
 }
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
-                              gpointer user_data)
-{
+                              gpointer user_data) {
 
     cairo_t *first_cr, *second_cr;
     cairo_surface_t *first, *second;
@@ -136,25 +126,20 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_stroke_preserve(first_cr); // draw stroke
 
     cairo_set_line_width(first_cr, PEN_WIDTH);     // setup pen width
-    cairo_set_source_rgba(first_cr, 1, 1, 1, 0.3); // free memery color
+    cairo_set_source_rgba(first_cr, 1, 1, 1, 0.3); // free memory color
     cairo_fill(first_cr);                          // fill free mem
 
     // calc the arc start angle and end angle
-    float start = 0.5 - ((float)memPercentage / 100);
-    float end = 0.5 + ((float)memPercentage / 100);
+    float start = 0.5 - ((float) memPercentage / 100);
+    float end = 0.5 + ((float) memPercentage / 100);
 
     // fill use memory
     cairo_arc(first_cr, 0, 0, SIZE / 2 - 2, M_PI * start, M_PI * end);
-    if (memPercentage <= 50)
-    {
+    if (memPercentage <= 50) {
         cairo_set_source_rgb(first_cr, 0.1, 0.7, 0.1); // green
-    }
-    else if (memPercentage <= 79)
-    {
+    } else if (memPercentage <= 79) {
         cairo_set_source_rgb(first_cr, 1, 0.6, 0); // yellow
-    }
-    else
-    {
+    } else {
         cairo_set_source_rgb(first_cr, 0.9, 0, 0); // red
     }
 
@@ -170,19 +155,20 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     sprintf(tmp, "%d%%", memPercentage);
     cairo_show_text(first_cr, tmp);
 
-    if (SHOW_NETWORK_SPEED)
-    {
+    if (SHOW_NETWORK_SPEED) {
         // draw an incomplete rectangle, missing a semicircle on the left
         cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193), 0.9);
         cairo_arc(second_cr, 0, SIZE / 2, SIZE / 2, -0.5 * M_PI, 0.5 * M_PI); // draw semicircle, like ")"
-        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2); // lint to rectangle (right, bottom)
+        cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH,
+                      RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2); // lint to rectangle (right, bottom)
         cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, (SIZE - RIGHT_CIRCLE_SIZE) / 2); // line to (right, top)
         cairo_fill(second_cr);
 
         cairo_close_path(second_cr);
 
         // draw right arc
-        cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193), 0.9); // The same color as the rectangle
+        cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193),
+                              0.9); // The same color as the rectangle
         cairo_translate(second_cr, RIGHT_CIRCLE_WIDTH, SIZE / 2); // set up (0, 0) to （right_edge,center)
         cairo_arc(second_cr, 0, 0, RIGHT_CIRCLE_SIZE / 2, -0.5 * M_PI, 0.5 * M_PI);
         cairo_fill(second_cr);
@@ -196,23 +182,17 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         cairo_set_font_size(second_cr, 12);
 
         cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) - NET_SPEED_TEXT_MARGIN_LEFT), -8);
-        if (csD >= 2048)
-        {
+        if (csD >= 2048) {
             sprintf(tmp, " ↑%.2f m/s", kb2m(csD));
-        }
-        else
-        {
+        } else {
             sprintf(tmp, " ↑ %lu kb/s", csD);
         }
 
         cairo_show_text(second_cr, tmp);
         cairo_move_to(second_cr, -((RIGHT_CIRCLE_WIDTH - SIZE / 2) - NET_SPEED_TEXT_MARGIN_LEFT), 15);
-        if (crD >= 1024)
-        {
+        if (crD >= 1024) {
             sprintf(tmp, " ↓%.2f m/s", kb2m(crD));
-        }
-        else
-        {
+        } else {
             sprintf(tmp, " ↓ %lu kb/s", crD);
         }
 
@@ -236,52 +216,34 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     return FALSE;
 }
 
-static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event)
-{
+static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event) {
     SHOW_NETWORK_SPEED = !SHOW_NETWORK_SPEED;
     gtk_widget_queue_draw(widget);
     return TRUE;
 }
 
-int main(int argc, char *argv[])
-{
-    // delay
-//    if (argc == 3) {
-//        if (strcmp( argv[1], "-delay") == 0) {
-//            int time = atoi(argv[2]);
-//            sleep(time);
-//        } else if (strcmp(argv[1], "-margin") == 0) { // 兼容操作系统
-//            int margin = atoi(argv[2]);
-//            NET_SPEED_TEXT_MARGIN_LEFT = margin;
-//        }
-//    } else if (argc == 2) {
-//        if (strcmp(argv[1], "-h") == 0) {
-//            printf("OPTIONS: \n\t-delay\tdelay load app. \n\t-margin\tset netspeed text left margin.\n");
-//            return 0 ;
-//        }
-//    }
-//
+int main(int argc, char *argv[]) {
     int time = 0;
-    for (int i=1; i<argc; i++) {
-        if (strcmp( argv[i], "-delay") == 0) {
-            if (argc > (i+1)) {
-                time = atoi(argv[i+1]);
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-delay") == 0) {
+            if (argc > (i + 1)) {
+                time = atoi(argv[i + 1]);
             } else {
                 printf("Error: missing delay value\n");
             }
 
-        } else if (strcmp(argv[i], "-margin") == 0) { // 兼容操作系统
-            if (argc > (i+1)) {
-                int margin = atoi(argv[i+1]);
+        } else if (strcmp(argv[i], "-margin") == 0) {
+            if (argc > (i + 1)) {
+                int margin = atoi(argv[i + 1]);
                 NET_SPEED_TEXT_MARGIN_LEFT = margin;
             } else {
                 printf("Error: missing margin value\n");
             }
 
 
-        } else if(strcmp(argv[i], "-h") == 0) {
+        } else if (strcmp(argv[i], "-h") == 0) {
             printf("OPTIONS: \n\t-delay\tdelay load app. \n\t-margin\tset netspeed text left margin.\n");
-            return 0 ;
+            return 0;
         }
     }
     sleep(time);
@@ -308,13 +270,15 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(window), darea);
 
     // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER); 
-    gtk_window_set_default_size(GTK_WINDOW(window), RIGHT_CIRCLE_WIDTH + (RIGHT_CIRCLE_SIZE / 2) + (SIZE / 2) + PEN_WIDTH * 2, SIZE + PEN_WIDTH + 4);
+    gtk_window_set_default_size(GTK_WINDOW(window),
+                                RIGHT_CIRCLE_WIDTH + (RIGHT_CIRCLE_SIZE / 2) + (SIZE / 2) + PEN_WIDTH * 2,
+                                SIZE + PEN_WIDTH + 4);
 
     // let the window move
     g_signal_connect(G_OBJECT(window), "motion-notify-event", G_CALLBACK(on_move_event), NULL);
 
     // timer
-    gdk_threads_add_timeout_full(G_PRIORITY_DEFAULT_IDLE, 1000, cb_timeout, (gpointer)darea, NULL);
+    gdk_threads_add_timeout_full(G_PRIORITY_DEFAULT_IDLE, 1000, cb_timeout, (gpointer) darea, NULL);
 
     // click event
     g_signal_connect(G_OBJECT(window), "button_press_event",
@@ -326,7 +290,7 @@ int main(int argc, char *argv[])
 
     GdkRectangle workarea = {0};
     gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &workarea);
-    gtk_window_move(GTK_WINDOW(window), workarea.width-200, workarea.height-100);
+    gtk_window_move(GTK_WINDOW(window), workarea.width - 200, workarea.height - 100);
 
     // show window
     gtk_widget_show_all(window);
