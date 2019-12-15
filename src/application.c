@@ -18,6 +18,7 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 #include <math.h>
+#include <time.h>
 
 #include "utils.h"
 
@@ -47,7 +48,7 @@ static void tran_setup(GtkWidget *win) {
 
     if (visual != NULL && gdk_screen_is_composited(screen)) {
         gtk_widget_set_visual(win, visual); // set transparent
-        g_print("is_composited=true");
+        g_print("is_composited=true\n");
     } else { // not support
         g_print("Your system not support transparent window!\nPlease check if you have turned off this feature.\n");
     }
@@ -56,6 +57,7 @@ static void tran_setup(GtkWidget *win) {
 gboolean on_move_event(GtkWidget *window,
                        GdkEvent *event,
                        gpointer user_data) {
+//    g_print("on_move_event event->button %d; event-type %d\n", event->button, event->type);
     gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
     return TRUE;
 }
@@ -216,9 +218,14 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     return FALSE;
 }
 
+
 static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event) {
-    SHOW_NETWORK_SPEED = !SHOW_NETWORK_SPEED;
-    gtk_widget_queue_draw(widget);
+//    printf("button_press event->type %d\n", event->type);
+    if(event->type == GDK_DOUBLE_BUTTON_PRESS) {
+        SHOW_NETWORK_SPEED = !SHOW_NETWORK_SPEED;
+        gtk_widget_queue_draw(widget);
+    }
+
     return TRUE;
 }
 
@@ -276,6 +283,7 @@ int main(int argc, char *argv[]) {
 
     // let the window move
     g_signal_connect(G_OBJECT(window), "motion-notify-event", G_CALLBACK(on_move_event), NULL);
+//    g_signal_connect(G_OBJECT(window), "button_press_event", G_CALLBACK(on_move_event), NULL);
 
     // timer
     gdk_threads_add_timeout_full(G_PRIORITY_DEFAULT_IDLE, 1000, cb_timeout, (gpointer) darea, NULL);

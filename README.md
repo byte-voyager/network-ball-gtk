@@ -57,7 +57,6 @@ Example, In Linux Mint 19:
 apt install libgtk-3-dev
 apt install cmake
 ```
-> Notic: may you need change the cmake version in CMakeLists.txt file
 
 build it
 ```
