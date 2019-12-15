@@ -1,58 +1,52 @@
 # network-ball-gtk
 
 Display network speed and memory information on linux desktop platform.
-在Linux桌面平台显示网速和流量的悬浮窗口。
 
 ![net-ball-gtk](https://raw.githubusercontent.com/Baloneo/network-ball-gtk/master/net-ball-gtk5.gif)
 
 ## Run
-1. 下载二进制文件`network-ball-gtk`, [releases](https://github.com/Baloneo/network-ball-gtk/releases)
+1. Clone or download this project.
 ```
-wget https://github.com/Baloneo/network-ball-gtk/releases/download/1.2/network-ball-gtk
+git clone https://github.com/Baloneo/network-ball-gtk.git
+cd network-ball-gtk
 ```
-2. 增加可执行权限
+2. change file mode bits
 ```
 chmod +x network-ball-gtk
 ```
-3. 运行
+3. run it
 ```
 ./network-ball-gtk
 ```
-后台运行
+or
 ```
 nohup ./network-ball-gtk &
 ```
-4. 停止
+4. stop
 ```
 ctrl+c
 ```
+or
 ```
 killall network-ball-gtk
 ```
 
-## Auto Start
-### 1. 手动添加
-通常你的Linux桌面环境会有一个自启动设置软件，你只要找到，然后添加本软件即可。
-
-*由于桌面完全启动需要一点时间，如果你发现软件自启动之后，背景不是透明的，你需要添加一个`-delay`参数来延迟启动*
-
-### 2. 使用脚本
-在项目根目录下执行
+## Auto Startup
 ```
 bash add_autostart.sh
 ```
 
 ## Options
 * -delay value
-指定延迟时间后显示界面，秒数
+delay start
 
 * -margin value
-设置网速文本左间距
+text margin
 
 ## Build
-Install cmake && gtk3 dev, 
+Install cmake && `gtk3 dev`, 
 
-Example, In Linux Mint 19:
+For example, In Linux Mint:
 ```
 apt install libgtk-3-dev
 apt install cmake
