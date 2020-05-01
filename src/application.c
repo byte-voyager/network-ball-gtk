@@ -41,11 +41,9 @@ static unsigned int memPercentage = 0;
 static void tran_setup(GtkWidget *win) {
     GdkScreen *screen;
     GdkVisual *visual;
-
     gtk_widget_set_app_paintable(win, TRUE);
     screen = gdk_screen_get_default();
     visual = gdk_screen_get_rgba_visual(screen);
-
     if (visual != NULL && gdk_screen_is_composited(screen)) {
         gtk_widget_set_visual(win, visual); // set transparent
         g_print("is_composited=true\n");
