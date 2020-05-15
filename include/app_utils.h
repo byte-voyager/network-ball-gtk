@@ -7,4 +7,8 @@ void get_bandwidth(unsigned long long int *receiveBytes, unsigned long long int 
 
 
 float kb2m(unsigned long int kb);
+
+float rand_color();
+
+float get_color();
 #endif /*UTILS_H*/

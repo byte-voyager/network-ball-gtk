@@ -1,5 +1,5 @@
 /* network-ball-gtk - display network speed and mem for linux
- * Copyright (C) @Baloneo 
+ * Copyright (C) @Baloneo
  * https://github.com/Baloneo/
  * This application is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,16 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 #include <math.h>
-#include <time.h>
 
-#include "utils.h"
+#include "app_utils.h"
 
 #define SIZE (52) /* left circle size*/
 #define RIGHT_CIRCLE_WIDTH (84)
 #define RIGHT_CIRCLE_SIZE (52)
 #define PEN_WIDTH (2)
 int NET_SPEED_TEXT_MARGIN_LEFT = 0;
-#define MEM_FONT "Noto Serif"
-#define NET_FONT "Noto"
+#define MEM_FONT "xxx"
+#define NET_FONT "xxx"
 
 static gboolean SHOW_NETWORK_SPEED = TRUE;
 
@@ -36,14 +35,18 @@ static gboolean SHOW_NETWORK_SPEED = TRUE;
 static unsigned long long int prD, psD;
 static unsigned long int crD, csD; // KB
 static unsigned int memPercentage = 0;
-
+static float rand_color1 = 0;
+static float rand_color2 = 0;
+static float rand_color3 = 0;
 
 static void tran_setup(GtkWidget *win) {
     GdkScreen *screen;
     GdkVisual *visual;
+
     gtk_widget_set_app_paintable(win, TRUE);
     screen = gdk_screen_get_default();
     visual = gdk_screen_get_rgba_visual(screen);
+
     if (visual != NULL && gdk_screen_is_composited(screen)) {
         gtk_widget_set_visual(win, visual); // set transparent
         g_print("is_composited=true\n");
@@ -55,9 +58,19 @@ static void tran_setup(GtkWidget *win) {
 gboolean on_move_event(GtkWidget *window,
                        GdkEvent *event,
                        gpointer user_data) {
-//    g_print("on_move_event event->button %d; event-type %d\n", event->button, event->type);
-    gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
+  //  g_print("on_move_event event->button %d; event-type %d\n", event->button, event->type);
+  //  printf("%d\n", ((GdkEventMotion*)event)->state);
+  //  printf("%d\n", GDK_BUTTON1_MASK);
+    if (((GdkEventMotion*)event)->state == GDK_BUTTON1_MASK) {
+        gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
+        return TRUE;
+    } else {
+        // printf("检测到鼠标悬浮\n");
+        // 告诉另一个进程 将界面展示
+    }
+
     return TRUE;
+
 }
 
 void init_value() {
@@ -78,9 +91,6 @@ void init_value() {
     memPercentage = get_mem_percentage();
 }
 
-float get_color(int c) {
-    return (float) c / 255;
-}
 
 
 static gboolean cb_timeout(gpointer data) {
@@ -133,14 +143,19 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     float start = 0.5 - ((float) memPercentage / 100);
     float end = 0.5 + ((float) memPercentage / 100);
 
+
     // fill use memory
     cairo_arc(first_cr, 0, 0, SIZE / 2 - 2, M_PI * start, M_PI * end);
     if (memPercentage <= 50) {
         cairo_set_source_rgb(first_cr, 0.1, 0.7, 0.1); // green
-    } else if (memPercentage <= 79) {
+    } else if (memPercentage <= 85) {  // %85 mem usage
         cairo_set_source_rgb(first_cr, 1, 0.6, 0); // yellow
     } else {
         cairo_set_source_rgb(first_cr, 0.9, 0, 0); // red
+    }
+
+    if (rand_color1 != 0 || rand_color2 != 0 || rand_color3 != 0)  {
+        cairo_set_source_rgb(first_cr, rand_color1, rand_color2, rand_color3);
     }
 
     cairo_fill(first_cr); // fill use memory
@@ -160,7 +175,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
         cairo_set_source_rgba(second_cr, get_color(193), get_color(205), get_color(193), 0.9);
         cairo_arc(second_cr, 0, SIZE / 2, SIZE / 2, -0.5 * M_PI, 0.5 * M_PI); // draw semicircle, like ")"
         cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH,
-                      RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2); // lint to rectangle (right, bottom)
+                      RIGHT_CIRCLE_SIZE + (SIZE - RIGHT_CIRCLE_SIZE) / 2); // line to rectangle (right, bottom)
         cairo_line_to(second_cr, RIGHT_CIRCLE_WIDTH, (SIZE - RIGHT_CIRCLE_SIZE) / 2); // line to (right, top)
         cairo_fill(second_cr);
 
@@ -218,17 +233,35 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 
 
 static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event) {
-//    printf("button_press event->type %d\n", event->type);
     if(event->type == GDK_DOUBLE_BUTTON_PRESS) {
         SHOW_NETWORK_SPEED = !SHOW_NETWORK_SPEED;
         gtk_widget_queue_draw(widget);
+    }
+
+    if (event->type == GDK_TRIPLE_BUTTON_PRESS) {
+
+        if (rand_color() > 0.7) {
+            rand_color2 = rand_color();
+            rand_color1 = rand_color2 /3;
+            rand_color3 = rand_color2 /2;
+        } else if (rand_color() > 0.2) {
+            rand_color3 = rand_color() / 2;
+            rand_color2 = rand_color2 /2;
+            rand_color1 = rand_color2 /2;
+        } else {
+            rand_color1 = rand_color() * 4;
+            rand_color2 = rand_color1 /2;
+            rand_color3 = rand_color1 /2;
+        }
     }
 
     return TRUE;
 }
 
 int main(int argc, char *argv[]) {
+
     int time = 0;
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-delay") == 0) {
             if (argc > (i + 1)) {
@@ -274,14 +307,15 @@ int main(int argc, char *argv[]) {
                      G_CALLBACK(on_draw_event), NULL);
     gtk_container_add(GTK_CONTAINER(window), darea);
 
-    // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER); 
+
+    // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),
                                 RIGHT_CIRCLE_WIDTH + (RIGHT_CIRCLE_SIZE / 2) + (SIZE / 2) + PEN_WIDTH * 2,
                                 SIZE + PEN_WIDTH + 4);
 
-    // let the window move
+    // let the window move enter-notify-event motion-notify-event
+    gtk_widget_set_events (window, GDK_POINTER_MOTION_MASK);
     g_signal_connect(G_OBJECT(window), "motion-notify-event", G_CALLBACK(on_move_event), NULL);
-//    g_signal_connect(G_OBJECT(window), "button_press_event", G_CALLBACK(on_move_event), NULL);
 
     // timer
     gdk_threads_add_timeout_full(G_PRIORITY_DEFAULT_IDLE, 1000, cb_timeout, (gpointer) darea, NULL);

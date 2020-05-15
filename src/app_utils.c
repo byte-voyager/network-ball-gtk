@@ -1,8 +1,9 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include "utils.h"
+#include <time.h>
+
+#include "app_utils.h"
 
 
 int get_mem_percentage()
@@ -81,3 +82,14 @@ float kb2m(unsigned long int kb)
 {
     return (float)kb / 1024;
 }
+
+float rand_color() {
+
+    srand ((unsigned) (time(NULL)));
+    return (float) (rand () & 255) / 255;
+}
+
+float get_color(int c) {
+    return (float) c / 255;
+}
+

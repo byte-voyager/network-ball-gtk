@@ -8,7 +8,7 @@ Display network speed and memory information on linux desktop platform.
 1. Clone or download this project.
 ```
 git clone https://github.com/Baloneo/network-ball-gtk.git
-cd network-ball-gtk/bin
+cd network-ball-gtk/release
 ```
 2. change file mode bits
 ```
@@ -44,18 +44,11 @@ delay start
 text margin
 
 ## Build
-Install cmake && `gtk3 dev`, 
-
-For example, In Linux Mint:
 ```
-apt install libgtk-3-dev
-apt install cmake
-```
-
-build it
-```
-cmake .
-make
+cd path/of/this/project
+meson builddir
+ninja
+./network-ball-gtk
 ```
 
 
