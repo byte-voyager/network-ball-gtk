@@ -47,6 +47,7 @@ text margin
 ```
 cd path/of/this/project
 meson builddir
+cd builddir
 ninja
 ./network-ball-gtk
 ```
