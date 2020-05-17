@@ -8,7 +8,7 @@ Display network speed and memory information on linux desktop platform.
 1. Clone or download this project.
 ```
 git clone https://github.com/Baloneo/network-ball-gtk.git
-cd network-ball-gtk/release
+cd network-ball-gtk/releases
 ```
 2. change file mode bits
 ```
