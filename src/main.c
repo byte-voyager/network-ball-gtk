@@ -64,11 +64,7 @@ gboolean on_move_event(GtkWidget *window,
     if (((GdkEventMotion*)event)->state == GDK_BUTTON1_MASK) {
         gtk_window_move(GTK_WINDOW(window), event->button.x_root - (SIZE / 2), event->button.y_root - (SIZE / 2));
         return TRUE;
-    } else {
-        // printf("检测到鼠标悬浮\n");
-        // 告诉另一个进程 将界面展示
     }
-
     return TRUE;
 
 }
