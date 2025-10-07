@@ -26,8 +26,8 @@
 #define RIGHT_CIRCLE_SIZE (52)
 #define PEN_WIDTH (2)
 int NET_SPEED_TEXT_MARGIN_LEFT = 0;
-#define MEM_FONT "xxx"
-#define NET_FONT "xxx"
+#define MEM_FONT "NotoSansMono"
+#define NET_FONT "NotoSansMono"
 
 static gboolean SHOW_NETWORK_SPEED = TRUE;
 
@@ -159,7 +159,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 
     // warn the user if memory too hight
     if (memPercentage >= 95) {
-        system("notify-send -i dialog-warning -t 10 \"Memory is too high\" \"$(ps -eo pid,ppid,%mem,%cpu,comm --sort=-%mem | head -6 | tail -5)\"");
+        system("notify-send -i dialog-warning -t 10 \"High memory usage\" \"$(ps -eo pid,ppid,%mem,%cpu,comm --sort=-%mem | head -6 | tail -5)\"");
     }
 
     if (rand_color1 != 0 || rand_color2 != 0 || rand_color3 != 0)  {
@@ -248,19 +248,19 @@ static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event) {
 
     if (event->type == GDK_TRIPLE_BUTTON_PRESS) {
 
-        if (rand_color() > 0.7) {
-            rand_color2 = rand_color();
-            rand_color1 = rand_color2 /3;
-            rand_color3 = rand_color2 /2;
-        } else if (rand_color() > 0.2) {
-            rand_color3 = rand_color() / 2;
-            rand_color2 = rand_color2 /2;
-            rand_color1 = rand_color2 /2;
-        } else {
-            rand_color1 = rand_color() * 4;
-            rand_color2 = rand_color1 /2;
-            rand_color3 = rand_color1 /2;
-        }
+        // if (rand_color() > 0.7) {
+        //     rand_color2 = rand_color();
+        //     rand_color1 = rand_color2 /3;
+        //     rand_color3 = rand_color2 /2;
+        // } else if (rand_color() > 0.2) {
+        //     rand_color3 = rand_color() / 2;
+        //     rand_color2 = rand_color2 /2;
+        //     rand_color1 = rand_color2 /2;
+        // } else {
+        //     rand_color1 = rand_color() * 4;
+        //     rand_color2 = rand_color1 /2;
+        //     rand_color3 = rand_color1 /2;
+        // }
     }
 
     return TRUE;
